@@ -6,13 +6,14 @@ def check_type(typee):
     if typee:
         pass
     else:
-        print("Incorrect parameters")
+        return 0
 
 
 # Check if --payment argument is correct
 def check_payment(payment, typee):
     if typee == "diff" and payment:
-        print("Incorrect parameters")
+        return 0
+
 
 # Begin Formulas
 # Monthly payment formula
@@ -109,12 +110,32 @@ principal = args.principal
 periods = args.periods
 interest = args.interest
 
-check_type(typee)
-check_payment(payment, typee)
-#calc_monthly_payments(principal, periods, interest)
+# Check the number of arguments
+list_arguments = [typee, payment, principal, periods, interest]
+number_arguments = 0
+negative_number = False
 
-#calc_annuity_payments(principal, periods, interest)
+for argum in list_arguments:
+    if argum != None:
+        number_arguments += 1
+        if type(argum) == float and argum < 0:
+            negative_number = True   
 
-# calc_annuity_payments_monthly(payment, periods, interest)
-
-calc_periods(principal, payment, interest)
+if number_arguments < 4:
+    print("Incorrect parameters.")
+else:
+    if check_type(typee) == 0 or check_payment(payment, typee) == 0:
+        print ("Incorrect parameters")
+    elif negative_number:
+         print ("Incorrect parameters")
+    else:
+        if typee == 'annuity':
+            if principal == None:
+                calc_annuity_payments_monthly(payment, periods, interest)
+            elif periods == None:
+                calc_periods(principal, payment, interest)
+            else:
+                calc_annuity_payments(principal, periods, interest)
+        else:
+            calc_monthly_payments(principal, periods, interest)
+           
